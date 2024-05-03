@@ -28,7 +28,7 @@ public class AuthController {
     public ResponseEntity<SimpleMessage> signUp(@Valid @RequestBody SignUpDTO signUpDTO) {
         SimpleMessage message = authService.signUp(signUpDTO);
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                              .body(message);
     }
 
