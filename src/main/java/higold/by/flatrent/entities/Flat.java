@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity(name = "Flats")
 @Table(name = "flats")
@@ -24,6 +25,13 @@ public class Flat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToOne(mappedBy = "flat", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Advertisment advertisment;
+
+    @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<FavouriteAdvertisment> favouriteAdvertisments;
 
     @Column(name = "number_of_rooms", nullable = false)
     private Integer numberOfRooms;
@@ -58,4 +66,5 @@ public class Flat {
     @Enumerated(EnumType.STRING)
     @Column(name = "renovation_type", nullable = false)
     private RenovationType renovationType;
+
 }
