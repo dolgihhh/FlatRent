@@ -1,7 +1,7 @@
 package higold.by.flatrent.controllers;
 
-import higold.by.flatrent.dto.requests.FlatReqDTO;
-import higold.by.flatrent.dto.requests.SignUpDTO;
+import higold.by.flatrent.dto.requests.FlatCreateDTO;
+import higold.by.flatrent.dto.responses.FlatDTO;
 import higold.by.flatrent.dto.responses.SimpleMessage;
 import higold.by.flatrent.services.FlatService;
 import jakarta.validation.Valid;
@@ -9,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,10 +22,35 @@ public class FlatController {
     private final FlatService flatService;
 
     @PostMapping("")
-    public ResponseEntity<SimpleMessage> createFlat(@Valid @RequestBody FlatReqDTO flatReqDTO) {
-        SimpleMessage message = flatService.createFlat(flatReqDTO);
+    public ResponseEntity<SimpleMessage> createFlat(
+            @Valid @RequestBody FlatCreateDTO flatCreateDTO) {
+        SimpleMessage message = flatService.createFlat(flatCreateDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                              .body(message);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<FlatDTO>> getUserFlats() {
+        List<FlatDTO> userFlats = flatService.getUserFlats();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(userFlats);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FlatDTO> getFlat(@PathVariable Long id) {
+        FlatDTO flatDTO = flatService.getFlat(id);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(flatDTO);
+    }
+
+    @GetMapping("/user/rent-available")
+    public ResponseEntity<List<FlatDTO>> getUserRentAvailableFlats() {
+        List<FlatDTO> userFlats = flatService.getUserRentAvailableFlats();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(userFlats);
     }
 }

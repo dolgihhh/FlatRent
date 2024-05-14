@@ -38,6 +38,54 @@ public class CustomExceptionHandler {
         return map;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchFlatException.class)
+    public Map<String, String> handleNoSuchFlatException(NoSuchFlatException exception) {
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Flat does not exist or it is not yours");
+
+        return map;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchAdvException.class)
+    public Map<String, String> handleNoSuchAdvException(NoSuchAdvException exception) {
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Advertisement does not exist");
+
+        return map;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AdvertisementDuplicateException.class)
+    public Map<String, String> handleAdvertisementDuplicateException(
+            AdvertisementDuplicateException exception) {
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Advertisement already exists");
+
+        return map;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AdvertisementAlreadyInactiveException.class)
+    public Map<String, String> handleAdvertisementAlreadyInactiveException(
+            AdvertisementAlreadyInactiveException exception) {
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Advertisement already inactive");
+
+        return map;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(FavouriteAdvDuplicateException.class)
+    public Map<String, String> handleFavouriteAdvDuplicateException(
+            FavouriteAdvDuplicateException exception) {
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Advertisement is already favourite");
+
+        return map;
+    }
+
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
     public Map<String, String> handleBadCredentialsException() {

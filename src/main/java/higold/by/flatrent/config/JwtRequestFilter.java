@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -36,6 +37,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String regex = "/api/advertisements/\\d+";
+        boolean isGetSingleAdv = Pattern.matches(regex, request.getRequestURI());
+        if (request.getMethod()
+                   .equals("GET") && (request.getRequestURI()
+                                            .endsWith("/api/advertisements") || isGetSingleAdv) &&
+            request.getHeader("Authorization") == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String authHeader = request.getHeader("Authorization");
         String username = null;
         String jwt;
@@ -102,7 +112,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
-        return path.contains("/api/auth/");
+        return path.contains("/api/auth/") || path.contains("/api/test");
+//               (path.endsWith("/api/advertisements") && request.getMethod().equals("GET"));
     }
 }
 

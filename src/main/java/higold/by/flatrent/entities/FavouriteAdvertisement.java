@@ -6,13 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "FavouriteAdvertisments")
-@Table(name = "favourite_advertisments")
+@Entity(name = "FavouriteAdvertisements")
+@Table(name = "favourite_advertisements")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FavouriteAdvertisment {
+public class FavouriteAdvertisement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,5 @@ public class FavouriteAdvertisment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flat_id", nullable = false)
-    private Flat flat;
+    private Advertisement advertisement;
 }

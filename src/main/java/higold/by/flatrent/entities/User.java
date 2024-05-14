@@ -1,13 +1,11 @@
 package higold.by.flatrent.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity(name = "Users")
@@ -38,6 +36,9 @@ public class User {
     private List<Flat> flats;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<FavouriteAdvertisment> favouriteAdvertisments;
+    private List<Advertisement> advertisements;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<FavouriteAdvertisement> favouriteAdvertisements;
 
 }

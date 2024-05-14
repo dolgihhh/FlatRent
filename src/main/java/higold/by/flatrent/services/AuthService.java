@@ -28,7 +28,7 @@ public class AuthService {
     private final JwtGenerator jwtGenerator;
 
     @Transactional
-    public SimpleMessage signUp (SignUpDTO signUpDTO) {
+    public SimpleMessage signUp(SignUpDTO signUpDTO) {
         if (userRepository.existsByEmail(signUpDTO.getEmail())) {
             throw new UserAlreadyExistsException();
         }
@@ -45,13 +45,14 @@ public class AuthService {
         return new SimpleMessage("Successfully signed up");
     }
 
-    public JwtToken logIn (LogInDTO logInDTO) {
+    public JwtToken logIn(LogInDTO logInDTO) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(logInDTO.getEmail(),
                                                         logInDTO.getPassword()));
 
-        User user = userRepository.findByEmail(logInDTO.getEmail()).orElseThrow();
+        User user = userRepository.findByEmail(logInDTO.getEmail())
+                                  .orElseThrow();
 
         return new JwtToken(jwtGenerator.generateToken(user));
     }

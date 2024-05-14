@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<UserDTO> getUser() {
         UserDTO user = userService.getUser();
 
@@ -30,7 +30,7 @@ public class UserController {
                              .body(user);
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<SimpleMessage> updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO) {
         SimpleMessage message = userService.updateUser(userUpdateDTO);
 

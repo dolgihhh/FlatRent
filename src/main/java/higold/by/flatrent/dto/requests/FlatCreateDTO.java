@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FlatReqDTO {
+public class FlatCreateDTO {
 
     @Min(value = 1, message = "Number of rooms must be greater than or equal to 1")
     @JsonProperty("number_of_rooms")

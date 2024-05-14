@@ -26,12 +26,8 @@ public class Flat {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne(mappedBy = "flat", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private Advertisment advertisment;
-
-    @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<FavouriteAdvertisment> favouriteAdvertisments;
+    @OneToOne(mappedBy = "flat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Advertisement advertisement;
 
     @Column(name = "number_of_rooms", nullable = false)
     private Integer numberOfRooms;
