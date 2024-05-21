@@ -57,6 +57,15 @@ public class CustomExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchFavouriteException.class)
+    public Map<String, String> handleNoSuchFavouriteException(NoSuchFavouriteException exception) {
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Advertisement is not favourite");
+
+        return map;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(AdvertisementDuplicateException.class)
     public Map<String, String> handleAdvertisementDuplicateException(
             AdvertisementDuplicateException exception) {

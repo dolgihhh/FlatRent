@@ -1,13 +1,12 @@
 package higold.by.flatrent.services;
 
 import higold.by.flatrent.dto.requests.AdvCreateDTO;
+import higold.by.flatrent.dto.requests.AdvUpdateDTO;
 import higold.by.flatrent.dto.requests.FavouriteAdvCreateDTO;
 import higold.by.flatrent.dto.responses.AdvertisementDTO;
+import higold.by.flatrent.dto.responses.FlatDTO;
 import higold.by.flatrent.dto.responses.SimpleMessage;
-import higold.by.flatrent.entities.Advertisement;
-import higold.by.flatrent.entities.FavouriteAdvertisement;
-import higold.by.flatrent.entities.Flat;
-import higold.by.flatrent.entities.User;
+import higold.by.flatrent.entities.*;
 import higold.by.flatrent.enums.AdvStatus;
 import higold.by.flatrent.exceptions.*;
 import higold.by.flatrent.mappers.AdvertisementMapper;
@@ -60,11 +59,12 @@ public class AdvService {
             currentAdv.setAdvStatus(AdvStatus.ACTIVE);
             currentAdv.setCreationDate(LocalDate.now());
             currentAdv.setNumberOfViews(0);
-            currentAdv.setRentType(advCreateDTO.getRentType());
-            currentAdv.setContactNumber(advCreateDTO.getContactNumber());
-            currentAdv.setContactName(advCreateDTO.getContactName());
-            currentAdv.setDescription(advCreateDTO.getDescription());
-            currentAdv.setPrice(advCreateDTO.getPrice());
+            advertisementMapper.updateAdvertisementFromCreateDTO(advCreateDTO, currentAdv);
+//            currentAdv.setRentType(advCreateDTO.getRentType());
+//            currentAdv.setContactNumber(advCreateDTO.getContactNumber());
+//            currentAdv.setContactName(advCreateDTO.getContactName());
+//            currentAdv.setDescription(advCreateDTO.getDescription());
+//            currentAdv.setPrice(advCreateDTO.getPrice());
 
             advertisementRepository.save(currentAdv);
         } else {
@@ -117,10 +117,16 @@ public class AdvService {
         List<AdvertisementDTO> userAdvertisementDTOs = new ArrayList<>();
 
         for (Advertisement advertisement : userAdvertisements) {
+            List<String> flatPhotos = new ArrayList<>();
+            for (Photo photo: advertisement.getFlat().getPhotos()) {
+                flatPhotos.add(photo.getUrl());
+            }
+
             AdvertisementDTO advDTO = advertisementMapper.advToAdvertisementDTO(advertisement);
             advDTO.setIsFavourite(
                     favouriteAdvertisementRepository.existsByUserAndAdvertisement(user,
                                                                                   advertisement));
+            advDTO.getFlat().setPhotos(flatPhotos);
             userAdvertisementDTOs.add(advDTO);
         }
 
@@ -135,7 +141,13 @@ public class AdvService {
         for (FavouriteAdvertisement favouriteAdv : favouriteAdvertisements) {
             Advertisement advertisement = favouriteAdv.getAdvertisement();
             if (advertisement.getAdvStatus() == AdvStatus.ACTIVE) {
+                List<String> flatPhotos = new ArrayList<>();
+                for (Photo photo: advertisement.getFlat().getPhotos()) {
+                    flatPhotos.add(photo.getUrl());
+                }
+
                 AdvertisementDTO advDTO = advertisementMapper.advToAdvertisementDTO(advertisement);
+                advDTO.getFlat().setPhotos(flatPhotos);
                 advDTO.setIsFavourite(true);
                 favAdvertisementDTOs.add(advDTO);
             }
@@ -159,6 +171,12 @@ public class AdvService {
             } else {
                 advDTO.setIsFavourite(false);
             }
+
+            List<String> flatPhotos = new ArrayList<>();
+            for (Photo photo: advertisement.getFlat().getPhotos()) {
+                flatPhotos.add(photo.getUrl());
+            }
+            advDTO.getFlat().setPhotos(flatPhotos);
             advertisementDTOs.add(advDTO);
         }
 
@@ -176,6 +194,12 @@ public class AdvService {
         advertisementRepository.save(advertisement);
 
         AdvertisementDTO advDTO = advertisementMapper.advToAdvertisementDTO(advertisement);
+
+        List<String> flatPhotos = new ArrayList<>();
+        for (Photo photo: advertisement.getFlat().getPhotos()) {
+            flatPhotos.add(photo.getUrl());
+        }
+        advDTO.getFlat().setPhotos(flatPhotos);
 
         if (user != null) {
             advDTO.setIsFavourite(
@@ -204,6 +228,37 @@ public class AdvService {
         advertisement.setAdvStatus(AdvStatus.INACTIVE);
         advertisementRepository.save(advertisement);
 
-        return new SimpleMessage("Advertisement successfully deactivated");
+        return new SimpleMessage("Advertisement deactivated");
+    }
+
+    public SimpleMessage updateAdvertisement(Long id, AdvUpdateDTO advUpdateDTO) {
+        User user = userService.getCurrentUser();
+        Advertisement advertisement = advertisementRepository.findById(id)
+                                                             .orElseThrow(NoSuchAdvException::new);
+        if (advertisement.getUser() != user || advertisement.getAdvStatus() == AdvStatus.INACTIVE) {
+            throw new NoSuchAdvException();
+        }
+
+        advertisementMapper.updateAdvertisementFromDTO(advUpdateDTO, advertisement);
+        advertisementRepository.save(advertisement);
+
+        return new SimpleMessage("Advertisement updated");
+    }
+
+    public SimpleMessage deleteFavouriteAdvertisement(Long id) {
+        User user = userService.getCurrentUser();
+        Advertisement advertisement = advertisementRepository.findById(id)
+                                                             .orElseThrow(NoSuchAdvException::new);
+        if (advertisement.getAdvStatus() == AdvStatus.INACTIVE) {
+            throw new NoSuchAdvException();
+        }
+
+        FavouriteAdvertisement favAdv =
+                favouriteAdvertisementRepository.findByUserAndAdvertisement(user, advertisement)
+                                                .orElseThrow(NoSuchFavouriteException::new);
+
+        favouriteAdvertisementRepository.delete(favAdv);
+
+        return new SimpleMessage("Favourite advertisement deleted");
     }
 }

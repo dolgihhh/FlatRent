@@ -1,10 +1,12 @@
 package higold.by.flatrent.mappers;
 
 import higold.by.flatrent.dto.requests.AdvCreateDTO;
+import higold.by.flatrent.dto.requests.AdvUpdateDTO;
 import higold.by.flatrent.dto.responses.AdvertisementDTO;
 import higold.by.flatrent.entities.Advertisement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface AdvertisementMapper {
@@ -18,5 +20,12 @@ public interface AdvertisementMapper {
     Advertisement advCreateDTOToAdv(AdvCreateDTO advCreateDTO);
 
     @Mapping(target = "isFavourite", ignore = true)
+    @Mapping(target = "flat.photos", ignore = true)
     AdvertisementDTO advToAdvertisementDTO(Advertisement advertisement);
+
+    void updateAdvertisementFromDTO(AdvUpdateDTO advUpdateDTO,
+                                    @MappingTarget Advertisement advertisement);
+
+    void updateAdvertisementFromCreateDTO(AdvCreateDTO advCreateDTO,
+                                    @MappingTarget Advertisement advertisement);
 }

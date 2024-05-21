@@ -1,6 +1,7 @@
 package higold.by.flatrent.controllers;
 
 import higold.by.flatrent.dto.requests.FlatCreateDTO;
+import higold.by.flatrent.dto.requests.FlatUpdateDTO;
 import higold.by.flatrent.dto.responses.FlatDTO;
 import higold.by.flatrent.dto.responses.SimpleMessage;
 import higold.by.flatrent.services.FlatService;
@@ -52,5 +53,22 @@ public class FlatController {
 
         return ResponseEntity.status(HttpStatus.OK)
                              .body(userFlats);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SimpleMessage> updateFlat(@PathVariable Long id,
+                                                    @Valid @RequestBody FlatUpdateDTO flatUpdateDTO) {
+        SimpleMessage message = flatService.updateFlat(id, flatUpdateDTO);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(message);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<SimpleMessage> deleteFlat(@PathVariable Long id) {
+        SimpleMessage message = flatService.deleteFlat(id);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(message);
     }
 }

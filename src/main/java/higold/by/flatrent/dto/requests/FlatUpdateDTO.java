@@ -14,12 +14,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FlatCreateDTO {
+public class FlatUpdateDTO {
 
     @Min(value = 1, message = "Number of rooms must be greater than or equal to 1")
     @JsonProperty("number_of_rooms")
@@ -51,7 +50,7 @@ public class FlatCreateDTO {
 
     @JsonProperty("total_floors")
     @Min(value = 1, message = "Total floors must be greater than or equal to 1")
-    @NotNull(message = "Total floor cannot be null")
+    @NotNull(message = "Total floors cannot be null")
     private Integer totalFloors;
 
     @JsonProperty("tv")
@@ -66,7 +65,4 @@ public class FlatCreateDTO {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Renovation type cannot be null")
     private RenovationType renovationType;
-
-    @NotNull(message = "Photos cannot be null")
-    private List<String> photos;
 }

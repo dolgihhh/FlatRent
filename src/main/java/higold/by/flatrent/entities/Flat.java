@@ -29,6 +29,9 @@ public class Flat {
     @OneToOne(mappedBy = "flat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Advertisement advertisement;
 
+    @OneToMany(mappedBy = "flat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Photo> photos;
+
     @Column(name = "number_of_rooms", nullable = false)
     private Integer numberOfRooms;
 

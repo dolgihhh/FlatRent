@@ -1,6 +1,7 @@
 package higold.by.flatrent.controllers;
 
 import higold.by.flatrent.dto.requests.AdvCreateDTO;
+import higold.by.flatrent.dto.requests.AdvUpdateDTO;
 import higold.by.flatrent.dto.requests.FavouriteAdvCreateDTO;
 import higold.by.flatrent.dto.responses.AdvertisementDTO;
 import higold.by.flatrent.dto.responses.SimpleMessage;
@@ -76,6 +77,24 @@ public class AdvertisementController {
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<SimpleMessage> deactivateAdvertisement(@PathVariable Long id) {
         SimpleMessage message = advService.deactivateAdvertisement(id);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(message);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SimpleMessage> updateAdvertisement(@PathVariable Long id,
+                                                             @Valid @RequestBody
+                                                             AdvUpdateDTO advUpdateDTO) {
+        SimpleMessage message = advService.updateAdvertisement(id, advUpdateDTO);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .body(message);
+    }
+
+    @DeleteMapping("/favourite/{id}")
+    public ResponseEntity<SimpleMessage> deleteFavouriteAdvertisement(@PathVariable Long id) {
+        SimpleMessage message = advService.deleteFavouriteAdvertisement(id);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .body(message);
